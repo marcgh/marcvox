@@ -1,0 +1,6 @@
+clear;
+boundbox( "-0.023121", "0.078626", "-0.038009", "0.121636", "-0.091940", "-0.017395" );
+directory;
+setimagefile( "C:\Users\marc\Documents\GitHub\marcvox\datasets\templeRing\templeR_par.txt" );
+theta("0","0.7853981633974482790","1.57079632679489661923","3.14159265358979323846","4.7123889803846898577"); 
+convexhull("0.10","12"); 
