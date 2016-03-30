@@ -1,27 +1,41 @@
 cmake_minimum_required (VERSION 2.8) 
 project (marcvox) 
-set (CMAKE_CXX_LIBRARY_ARCHITECTURE x64)
 
+set (CMAKE_CXX_LIBRARY_ARCHITECTURE x64)
+set (CMAKE_INSTALL_PREFIX "./")
+
+IF (WIN32)
 set (CMAKE_PREFIX_PATH   "p:/opencv-2.4.8_64/"
-	                     "p:/download/opencv-2.4.8/opencv/sources/"
+	                 "p:/download/opencv-2.4.8/opencv/sources/"
                          "p:/OpenSceneGraph-3.3.0"
                          "p:/OpenSceneGraph-3.3.0/CMakeModules"
                          "p:/qt5stable/qtbase/lib/cmake"
                          "p:/tbb42_20140122oss")
-						  
-set (CMAKE_INSTALL_PREFIX "./")
-
-FIND_PACKAGE(OpenCV 2.4.8 REQUIRED )
-
 # a little help to findtbb.cmake ...
-set (TBB_FOUND Yes)
 find_library(TBB_LIBRARY_DEBUG tbb_debug HINTS p:/tbb42_20140122oss/lib/intel64/vc12)
 find_library(TBB_LIBRARY tbb HINTS p:/tbb42_20140122oss/lib/intel64/vc12)
 find_library(TBB_MALLOC_LIBRARY_DEBUG tbbmalloc_debug HINTS p:/tbb42_20140122oss/lib/intel64/vc12)
 find_library(TBB_MALLOC_LIBRARY tbbmalloc HINTS p:/tbb42_20140122oss/lib/intel64/vc12)
 set (TBB_INCLUDE_DIR      "p:/tbb42_20140122oss/include")
-SET (TBB_LIBRARIES        "${TBB_LIBRARY}"       "${TBB_MALLOC_LIBRARY}")
-SET (TBB_DEBUG_LIBRARIES  "${TBB_LIBRARY_DEBUG}" "${TBB_MALLOC_LIBRARY_DEBUG}" )
+ENDIF()
+
+IF (UNIX)
+set (CMAKE_PREFIX_PATH "~/github/intel-tbb/")
+set (TBB_PREFIX_RELEASE "~/github/intel-tbb/build/linux_intel64_gcc_cc4.8_libc2.19_kernel3.19.0_release/")
+set (TBB_PREFIX_DEBUG "~/github/intel-tbb/build/linux_intel64_gcc_cc4.8_libc2.19_kernel3.19.0_debug/")
+find_library(TBB_LIBRARY_DEBUG tbb_debug HINTS ${TBB_PREFIX_DEBUG})
+find_library(TBB_LIBRARY tbb HINTS ${TBB_PREFIX_RELEASE})
+find_library(TBB_MALLOC_LIBRARY_DEBUG tbbmalloc_debug HINTS ${TBB_PREFIX_DEBUG})
+find_library(TBB_MALLOC_LIBRARY tbbmalloc HINTS ${TBB_PREFIX_RELEASE})
+set (TBB_INCLUDE_DIR      ${CMAKE_PREFIX_PATH}/include)
+ENDIF()
+						  
+
+FINd_PACKAGE(OpenCV)
+
+set (TBB_FOUND Yes)
+set (TBB_LIBRARIES        "${TBB_LIBRARY}"       "${TBB_MALLOC_LIBRARY}")
+set (TBB_DEBUG_LIBRARIES  "${TBB_LIBRARY_DEBUG}" "${TBB_MALLOC_LIBRARY_DEBUG}" )
 
 message (STATUS "TBB_FOUND ....................: ${TBB_FOUND}")
 message (STATUS "TBB_LIBRARY_DEBUG ............: ${TBB_LIBRARY_DEBUG}")
